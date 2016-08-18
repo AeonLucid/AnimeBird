@@ -5,5 +5,5 @@ AnimeBird is a NodeJS application that aims to provide an easy-to-use interface 
 
 ## Inspiration
 
- - Taiga [GitHub](https://github.com/erengy/taiga) / [Website](http://taiga.moe/)
- - CouchPotato [GitHub](https://github.com/CouchPotato/CouchPotatoServer) / [Website](https://couchpota.to/)
+ - Taiga - [GitHub](https://github.com/erengy/taiga) / [Website](http://taiga.moe/)
+ - CouchPotato - [GitHub](https://github.com/CouchPotato/CouchPotatoServer) / [Website](https://couchpota.to/)
