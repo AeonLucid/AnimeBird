@@ -15,7 +15,7 @@ namespace AnitomyLib.Tests
             foreach (var anime in json)
             {
                 var anitomy = new Anitomy();;
-                anitomy.Parse(anime["file_name"].ToString());
+                Assert.True(anitomy.Parse(anime["file_name"].ToString()));
 
                 break;
             }

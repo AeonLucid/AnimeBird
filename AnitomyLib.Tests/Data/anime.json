@@ -1,14 +1,5 @@
 ﻿[
   {
-    "anime_title": "Princess Lover!",
-    "episode_number": "01",
-    "file_checksum": "2048A39A",
-    "file_extension": "mkv",
-    "file_name": "[ANBU]_Princess_Lover!_-_01_[2048A39A].mkv",
-    "id": 6201,
-    "release_group": "ANBU"
-  },
-  {
     "anime_title": "Canaan",
     "audio_term": "AAC",
     "episode_number": "01",
@@ -21,14 +12,6 @@
     "video_term": "H.264"
   },
   {
-    "anime_title": "Haiyoru! Nyaru-Ani",
-    "file_checksum": "596DD8E6",
-    "file_extension": "mkv",
-    "file_name": "[ANBU-umai]_Haiyoru!_Nyaru-Ani_[596DD8E6].mkv",
-    "id": 7596,
-    "release_group": "ANBU-umai"
-  },
-  {
     "anime_title": "Special A",
     "episode_number": "01",
     "file_checksum": "C83164B9",
@@ -37,6 +20,23 @@
     "id": 3470,
     "release_group": "BakaWolf-m.3.3.w",
     "video_term": "H.264"
+  },
+  {
+    "anime_title": "Princess Lover!",
+    "episode_number": "01",
+    "file_checksum": "2048A39A",
+    "file_extension": "mkv",
+    "file_name": "[ANBU]_Princess_Lover!_-_01_[2048A39A].mkv",
+    "id": 6201,
+    "release_group": "ANBU"
+  },
+  {
+    "anime_title": "Haiyoru! Nyaru-Ani",
+    "file_checksum": "596DD8E6",
+    "file_extension": "mkv",
+    "file_name": "[ANBU-umai]_Haiyoru!_Nyaru-Ani_[596DD8E6].mkv",
+    "id": 7596,
+    "release_group": "ANBU-umai"
   },
   {
     "anime_title": "Seikon no Qwaser",

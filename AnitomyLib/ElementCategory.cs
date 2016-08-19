@@ -1,6 +1,6 @@
 ﻿namespace AnitomyLib
 {
-    public enum ElementCategory
+    internal enum ElementCategory
     {
         IterateFirst,
         AnimeSeason = IterateFirst,

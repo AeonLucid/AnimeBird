@@ -1,6 +1,6 @@
 namespace AnitomyLib.Keywords
 {
-    public class Keyword
+    internal class Keyword
     {
 
         public Keyword(ElementCategory category, KeywordOptions options)

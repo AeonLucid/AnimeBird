@@ -1,9 +1,19 @@
-﻿namespace AnitomyLib
-{
-    public class Options
-    {
+﻿using System.Collections.Generic;
 
-        public const string AllowedDelimiters = " _.&+,|";
+namespace AnitomyLib
+{
+    internal static class Options
+    {
+        public static readonly List<char> AllowedDelimiters = new List<char>()
+        {
+            ' ',
+            '_',
+            '.',
+            '&',
+            '+',
+            ',',
+            '|'
+        };
 
         public const bool ParseEpisodeNumber = true;
 
@@ -12,6 +22,5 @@
         public const bool ParseFileExtension = true;
 
         public const bool ParseReleaseGroup = true;
-
     }
 }

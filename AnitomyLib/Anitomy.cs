@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using AnitomyLib.Keywords;
+using AnitomyLib.Tokens;
 
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 namespace AnitomyLib
@@ -8,14 +10,19 @@ namespace AnitomyLib
     public class Anitomy
     {
         private readonly Dictionary<ElementCategory, string> _elements;
+        private readonly List<Token> _tokens;
 
         public Anitomy()
         {
             _elements = new Dictionary<ElementCategory, string>();
+            _tokens = new List<Token>();
         }
 
         public bool Parse(string fileName)
         {
+            _elements.Clear();
+            _tokens.Clear();
+
             if (Options.ParseFileExtension)
             {
                 string fileExtension;
@@ -29,8 +36,10 @@ namespace AnitomyLib
                 return false;
 
             _elements.Add(ElementCategory.FileName, fileName);
-
-            // TODO: Tokenizer
+            
+            var tokenizer = new Tokenizer(fileName, _elements, _tokens);
+            if (!tokenizer.Tokenize())
+                return false;
 
             // TODO: Parser
 

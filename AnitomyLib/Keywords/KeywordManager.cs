@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using AnitomyLib.Tokens;
 
 namespace AnitomyLib.Keywords
 {
-    public static class KeywordManager
+    internal static class KeywordManager
     {
         private static readonly Dictionary<string, Keyword> FileExtensions = new Dictionary<string, Keyword>();
         private static readonly Dictionary<string, Keyword> Keys = new Dictionary<string, Keyword>();
@@ -184,6 +186,33 @@ namespace AnitomyLib.Keywords
             var keywordContainer = GetKeywordContainer(category);
 
             return keywordContainer.ContainsKey(str) && keywordContainer[str].Category == category;
+        }
+
+        public static void Peek(string fileName, TokenRange range, Dictionary<ElementCategory, string> elements, List<TokenRange> preidentifiedTokens)
+        {
+            var entries = new List<Tuple<ElementCategory, List<string>>>
+            {
+                Tuple.Create(ElementCategory.AudioTerm, new List<string> { "DUAL AUDIO" }),
+                Tuple.Create(ElementCategory.VideoTerm, new List<string> { "H264", "H.264" }),
+                Tuple.Create(ElementCategory.VideoResolution, new List<string> { "480P", "720P", "1080P" }),
+                Tuple.Create(ElementCategory.Source, new List<string> { "BLU-RAY" }),
+            };
+
+            var tokenPart = fileName.Substring(range.Offset, range.Size).ToUpper();
+
+            foreach (var entry in entries)
+            {
+                foreach (var keyword in entry.Item2)
+                {
+                    var pos = tokenPart.IndexOf(keyword, StringComparison.Ordinal);
+                    if (pos != -1)
+                    {
+                        var offset = pos + range.Offset;
+                        elements.Add(entry.Item1, keyword);
+                        preidentifiedTokens.Add(new TokenRange(offset, keyword.Length));
+                    }
+                }
+            }
         }
 
         private static Dictionary<string, Keyword> GetKeywordContainer(ElementCategory category)
