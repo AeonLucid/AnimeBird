@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using AnimeBird.Parser.Elements;
-using AnimeBird.Parser.Parser;
+using AnimeBird.Parser.Parse;
 using AnimeBird.Parser.Tokens;
 
 namespace AnimeBird.Parser
@@ -15,15 +15,15 @@ namespace AnimeBird.Parser
         public FileNameParser(string fileName)
         {
             _fileName = fileName;
-            Tokens = new List<Token>();
+            Tokens = new LinkedList<Token>();
             Elements = new Dictionary<ElementCategory, string>();
         }
 
         internal string FileName { get; private set; }
 
-        internal List<Token> Tokens { get; }
+        public LinkedList<Token> Tokens { get; }
 
-        internal Dictionary<ElementCategory, string> Elements { get; }
+        public Dictionary<ElementCategory, string> Elements { get; }
 
         public bool Parse()
         {
@@ -36,6 +36,9 @@ namespace AnimeBird.Parser
             var tokenizer = new Tokenizer(this);
             if (!tokenizer.Tokenize())
                 return false;
+
+            var parser = new Parse.Parser(this);
+            parser.Parse();
 
             return true;
         }

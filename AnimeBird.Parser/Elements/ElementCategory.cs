@@ -1,6 +1,6 @@
 ﻿namespace AnimeBird.Parser.Elements
 {
-    internal enum ElementCategory
+    public enum ElementCategory
     {
         AnimeSeason,
         AnimeSeasonPrefix,

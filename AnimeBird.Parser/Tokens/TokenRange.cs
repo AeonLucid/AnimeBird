@@ -1,6 +1,6 @@
 ﻿namespace AnimeBird.Parser.Tokens
 {
-    internal class TokenRange
+    public class TokenRange
     {
         private readonly string _fileName;
 

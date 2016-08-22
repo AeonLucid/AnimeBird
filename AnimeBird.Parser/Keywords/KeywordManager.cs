@@ -7,19 +7,27 @@ namespace AnimeBird.Parser.Keywords
 {
     internal static class KeywordManager
     {
-        private static readonly Dictionary<ElementCategory, List<string>> Keywords;
+        private static readonly Dictionary<string, Keyword> FileExtensions;
+        private static readonly Dictionary<string, Keyword> Keys;
 
         static KeywordManager()
         {
-            Keywords = new Dictionary<ElementCategory, List<string>>();
+            FileExtensions = new Dictionary<string, Keyword>();
+            Keys = new Dictionary<string, Keyword>();
+
+            var optionsDefault = new KeywordOptions();
+            var optionsInvalid = new KeywordOptions(true, true, true);
+            var optionsUnidentifiable = new KeywordOptions(false, true, true);
+            var optionsUnidentifiableInvalid = new KeywordOptions(true, true, false);
+            var optionsUnidentifiableUnsearchable = new KeywordOptions(false, false, true);
 
             #region Keyword defaults
-            Add(ElementCategory.AnimeSeasonPrefix, new[]
+            Add(ElementCategory.AnimeSeasonPrefix, optionsUnidentifiable, new[]
             {
                 "SAISON", "SEASON"
             });
 
-            Add(ElementCategory.AnimeType, new[]
+            Add(ElementCategory.AnimeType, optionsUnidentifiable, new[]
             {
                 "GEKIJOUBAN", "MOVIE",
                 "OAD", "OAV", "ONA", "OVA",
@@ -27,19 +35,19 @@ namespace AnimeBird.Parser.Keywords
                 "TV"
             });
 
-            Add(ElementCategory.AnimeType, new[]
+            Add(ElementCategory.AnimeType, optionsUnidentifiableUnsearchable, new[]
             {
                 "SP"
             }); // e.g. "Yumeiro Patissiere SP Professiona"
 
-            Add(ElementCategory.AnimeType, new[]
+            Add(ElementCategory.AnimeType, optionsUnidentifiableInvalid, new[]
             {
                 "ED", "ENDING", "NCED",
                 "NCOP", "OP", "OPENING",
                 "PREVIEW", "PV"
             });
 
-            Add(ElementCategory.AudioTerm, new[]
+            Add(ElementCategory.AudioTerm, optionsDefault, new[]
             {
                 // Audio channels
                 "2.0CH", "2CH", "5.1", "5.1CH", "DTS", "DTS-ES", "DTS5.1",
@@ -51,77 +59,77 @@ namespace AnimeBird.Parser.Keywords
                 "DUALAUDIO", "DUAL AUDIO"
             });
 
-            Add(ElementCategory.DeviceCompatibility, new[]
+            Add(ElementCategory.DeviceCompatibility, optionsDefault, new[]
             {
                 "IPAD3", "IPHONE5", "IPOD", "PS3", "XBOX", "XBOX360"
             });
 
-            Add(ElementCategory.DeviceCompatibility, new[]
+            Add(ElementCategory.DeviceCompatibility, optionsUnidentifiable, new[]
             {
                 "ANDROID"
             });
 
-            Add(ElementCategory.EpisodePrefix, new[]
+            Add(ElementCategory.EpisodePrefix, optionsDefault, new[]
             {
                 "EP", "EP.", "EPS", "EPS.", "EPISODE", "EPISODE.", "EPISODES",
                 "CAPITULO", "EPISODIO", "FOLGE"
             });
 
-            Add(ElementCategory.EpisodePrefix, new[]
+            Add(ElementCategory.EpisodePrefix, optionsInvalid, new[]
             {
                 "E", "\x7B2C"
             }); // single-letter episode keywords are not valid tokens
 
-            Add(ElementCategory.FileExtension, new[]
+            Add(ElementCategory.FileExtension, optionsDefault, new[]
             {
                 "3GP", "AVI", "DIVX", "FLV", "M2TS", "MKV", "MOV", "MP4", "MPG",
                 "OGM", "RM", "RMVB", "WEBM", "WMV"
             });
 
-            Add(ElementCategory.FileExtension, new[]
+            Add(ElementCategory.FileExtension, optionsInvalid, new[]
             {
                 "AAC", "AIFF", "FLAC", "M4A", "MP3", "MKA", "OGG", "WAV", "WMA",
                 "7Z", "RAR", "ZIP",
                 "ASS", "SRT"
             });
 
-            Add(ElementCategory.Language, new[]
+            Add(ElementCategory.Language, optionsDefault, new[]
             {
                 "ENG", "ENGLISH", "ESPANO", "JAP", "PT-BR", "SPANISH", "VOSTFR"
             });
 
-            Add(ElementCategory.Language, new[]
+            Add(ElementCategory.Language, optionsUnidentifiable, new[]
             {
                 "ESP", "ITA"
             }); // e.g. "Tokyo ESP", "Bokura ga Ita"
 
-            Add(ElementCategory.Other, new[]
+            Add(ElementCategory.Other, optionsDefault, new[]
             {
                 "REMASTER", "REMASTERED", "UNCENSORED", "UNCUT",
                 "TS", "VFR", "WIDESCREEN", "WS"
             });
 
-            Add(ElementCategory.ReleaseGroup, new[]
+            Add(ElementCategory.ReleaseGroup, optionsDefault, new[]
             {
                 "THORA"
             });
 
-            Add(ElementCategory.ReleaseInformation, new[]
+            Add(ElementCategory.ReleaseInformation, optionsDefault, new[]
             {
                 "BATCH", "COMPLETE", "PATCH", "REMUX"
             });
 
-            Add(ElementCategory.ReleaseInformation, new[]
+            Add(ElementCategory.ReleaseInformation, optionsUnidentifiable, new[]
             {
                 "END", "FINA"
             }); // e.g. "The End of Evangelion", "Final Approach"
 
-            Add(ElementCategory.ReleaseVersion, new[]
+            Add(ElementCategory.ReleaseVersion, optionsDefault, new[]
             {
                 "V0", "V1", "V2", "V3", "V4"
             });
 
-            Add(ElementCategory.Source, new[]
+            Add(ElementCategory.Source, optionsDefault, new[]
             {
                 "BD", "BDRIP", "BLURAY", "BLU-RAY",
                 "DVD", "DVD5", "DVD9", "DVD-R2J", "DVDRIP", "DVD-RIP",
@@ -130,13 +138,13 @@ namespace AnimeBird.Parser.Keywords
                 "WEBCAST", "WEBRIP"
             });
 
-            Add(ElementCategory.Subtitles, new[]
+            Add(ElementCategory.Subtitles, optionsDefault, new[]
             {
                 "ASS", "BIG5", "DUB", "DUBBED", "HARDSUB", "RAW", "SOFTSUB",
                 "SOFTSUBS", "SUB", "SUBBED", "SUBTITLED"
             });
 
-            Add(ElementCategory.VideoTerm, new[]
+            Add(ElementCategory.VideoTerm, optionsDefault, new[]
             {
                 // Frame rate
                 "23.976FPS", "24FPS", "29.97FPS", "30FPS", "60FPS", "120FPS",
@@ -152,28 +160,63 @@ namespace AnimeBird.Parser.Keywords
                 "HD", "SD"
             });
 
-            Add(ElementCategory.VolumePrefix, new[]
+            Add(ElementCategory.VolumePrefix, optionsDefault, new[]
             {
                 "VO", "VOL.", "VOLUME"
             });
-#endregion
+            #endregion
         }
 
-        private static void Add(ElementCategory category, IEnumerable<string> keywords)
+        private static void Add(ElementCategory category, KeywordOptions options, IEnumerable<string> keywords)
         {
-            if (!Keywords.ContainsKey(category))
+            var keywordContainer = GetKeywordContainer(category);
+
+            foreach (var keyword in keywords)
             {
-                Keywords.Add(category, new List<string>(keywords));
-            }
-            else
-            {
-                Keywords[category].AddRange(keywords);
+                if (string.IsNullOrEmpty(keyword))
+                    continue;
+
+                if (keywordContainer.ContainsKey(keyword))
+                    throw new Exception($"Keyword '{keyword}' already exists.");
+
+                keywordContainer.Add(keyword, new Keyword(category, options));
             }
         }
 
         public static bool Find(string keyword, ElementCategory category)
         {
-            return Keywords.ContainsKey(category) && Keywords[category].Contains(keyword.ToUpper());
+            keyword = keyword.ToUpper();
+
+            var keywordContainer = GetKeywordContainer(category);
+
+            return keywordContainer.ContainsKey(keyword) && keywordContainer[keyword].Category == category;
+        }
+
+        public static bool Find(string keyword, ElementCategory category, KeywordOptions options, out ElementCategory outCategory, out KeywordOptions outOptions)
+        {
+            keyword = keyword.ToUpper();
+
+            outCategory = category;
+            outOptions = options;
+
+            var keywordContainer = GetKeywordContainer(category);
+
+            if (keywordContainer.ContainsKey(keyword))
+            {
+                var key = keywordContainer[keyword];
+                if (category == ElementCategory.Unknown)
+                {
+                    outCategory = key.Category;
+                }
+                else if (key.Category != category)
+                {
+                    return false;
+                }
+                outOptions = key.Options;
+                return true;
+            }
+
+            return false;
         }
 
         public static List<TokenRange> Peek(FileNameParser parser, TokenRange range)
@@ -204,6 +247,11 @@ namespace AnimeBird.Parser.Keywords
             }
 
             return preidentifiedTokens;
+        }
+
+        private static Dictionary<string, Keyword> GetKeywordContainer(ElementCategory category)
+        {
+            return category == ElementCategory.FileExtension ? FileExtensions : Keys;
         }
     }
 }

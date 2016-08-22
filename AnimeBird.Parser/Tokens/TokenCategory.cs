@@ -1,6 +1,6 @@
 ﻿namespace AnimeBird.Parser.Tokens
 {
-    internal enum TokenCategory
+    public enum TokenCategory
     {
         Unknown,
         Bracket,

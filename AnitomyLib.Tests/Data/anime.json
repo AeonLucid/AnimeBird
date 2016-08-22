@@ -1,5 +1,29 @@
 ﻿[
   {
+    "anime_title": "Toradora ED",
+    "anime_type": "ED",
+    "audio_term": "AAC",
+    "episode_number": "2",
+    "file_checksum": "3B65D1E6",
+    "file_extension": "mkv",
+    "file_name": "[Coalgirls]_Toradora_ED2_(704x480_DVD_AAC)_[3B65D1E6].mkv",
+    "id": 4224,
+    "release_group": "Coalgirls",
+    "source": "DVD",
+    "video_resolution": "704x480"
+  },
+  {
+    "anime_title": "Fullmetal Alchemist",
+    "anime_year": "2009",
+    "episode_number": "04",
+    "file_checksum": "40F2A957",
+    "file_extension": "mp4",
+    "file_name": "[Taka]_Fullmetal_Alchemist_(2009)_04_[720p][40F2A957].mp4",
+    "id": 5114,
+    "release_group": "Taka",
+    "video_resolution": "720p"
+  },
+  {
     "anime_title": "Canaan",
     "audio_term": "AAC",
     "episode_number": "01",
@@ -72,19 +96,6 @@
     "release_version": "2",
     "source": "DVD",
     "video_term": "h264"
-  },
-  {
-    "anime_title": "Toradora ED",
-    "anime_type": "ED",
-    "audio_term": "AAC",
-    "episode_number": "2",
-    "file_checksum": "3B65D1E6",
-    "file_extension": "mkv",
-    "file_name": "[Coalgirls]_Toradora_ED2_(704x480_DVD_AAC)_[3B65D1E6].mkv",
-    "id": 4224,
-    "release_group": "Coalgirls",
-    "source": "DVD",
-    "video_resolution": "704x480"
   },
   {
     "anime_title": "Mobile Suit Gundam 00 S2",
@@ -176,17 +187,6 @@
     "release_group": "SS",
     "video_resolution": "1280x720",
     "video_term": "h264"
-  },
-  {
-    "anime_title": "Fullmetal Alchemist",
-    "anime_year": "2009",
-    "episode_number": "04",
-    "file_checksum": "40F2A957",
-    "file_extension": "mp4",
-    "file_name": "[Taka]_Fullmetal_Alchemist_(2009)_04_[720p][40F2A957].mp4",
-    "id": 5114,
-    "release_group": "Taka",
-    "video_resolution": "720p"
   },
   {
     "anime_title": "Summer Wars",

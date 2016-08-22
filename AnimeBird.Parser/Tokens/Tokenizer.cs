@@ -7,11 +7,11 @@ namespace AnimeBird.Parser.Tokens
 {
     internal class Tokenizer
     {
-        private readonly FileNameParser _parser;
+        private readonly FileNameParser _fileNameParser;
 
-        public Tokenizer(FileNameParser parser)
+        public Tokenizer(FileNameParser fileNameParser)
         {
-            _parser = parser;
+            _fileNameParser = fileNameParser;
         }
 
         private static readonly List<Tuple<char, char>> BracketPairs = new List<Tuple<char, char>>
@@ -29,15 +29,13 @@ namespace AnimeBird.Parser.Tokens
         {
             TokenizeBrackets();
 
-            return _parser.Tokens.Count != 0;
+            return _fileNameParser.Tokens.Count != 0;
         }
 
-        private void FoundToken(TokenCategory category, TokenRange range)
+        private void FoundToken(TokenCategory category, bool enclosed, TokenRange range)
         {
-            var token = new Token(category, range);
-            _parser.Tokens.Add(token);
-
-            Console.WriteLine($"{token.Range.StartIndex, -4}|{token.Category, -12}|'{token.Range.Content}'");
+            var token = new Token(category, range, enclosed);
+            _fileNameParser.Tokens.AddLast(token);
         }
         
         /// <summary>
@@ -51,31 +49,31 @@ namespace AnimeBird.Parser.Tokens
             var currentPosition = 0;
             var matchingBracket = '\0';
 
-            while (currentPosition < _parser.FileName.Length)
+            while (currentPosition < _fileNameParser.FileName.Length)
             {
-                currentPosition = isOpen ? _parser.FileName.IndexOf(matchingBracket, currentPosition) : FindOpeningBracket(currentPosition, out matchingBracket);
+                currentPosition = isOpen ? _fileNameParser.FileName.IndexOf(matchingBracket, currentPosition) : FindOpeningBracket(currentPosition, out matchingBracket);
 
                 if (currentPosition == -1)
-                    currentPosition = _parser.FileName.Length;
+                    currentPosition = _fileNameParser.FileName.Length;
 
-                var range = new TokenRange(_parser.FileName, previousPosition, currentPosition);
+                var range = new TokenRange(_fileNameParser.FileName, previousPosition, currentPosition);
                 if (range.Length > 0)
-                    TokenizeByPreidentified(range);
+                    TokenizeByPreidentified(isOpen, range);
 
-                if (currentPosition != _parser.FileName.Length)
+                if (currentPosition != _fileNameParser.FileName.Length)
                 {
-                    FoundToken(TokenCategory.Bracket, new TokenRange(_parser.FileName, currentPosition, ++currentPosition));
+                    FoundToken(TokenCategory.Bracket, true, new TokenRange(_fileNameParser.FileName, currentPosition, ++currentPosition));
                     isOpen = !isOpen;
                     previousPosition = currentPosition;
                 }
             }
         }
 
-        private void TokenizeByPreidentified(TokenRange range)
+        private void TokenizeByPreidentified(bool enclosed, TokenRange range)
         {
-            var preidentifiedTokens = KeywordManager.Peek(_parser, range);
+            var preidentifiedTokens = KeywordManager.Peek(_fileNameParser, range);
             var currentIndex = range.StartIndex;
-            var subrange = new TokenRange(_parser.FileName, range.StartIndex);
+            var subrange = new TokenRange(_fileNameParser.FileName, range.StartIndex);
 
             while (currentIndex < range.EndIndex)
             {
@@ -84,9 +82,9 @@ namespace AnimeBird.Parser.Tokens
                     if (preidentifiedToken.StartIndex == currentIndex)
                     {
                         if (subrange.Length > 0)
-                            TokenizeByDelimiters(subrange);
+                            TokenizeByDelimiters(enclosed, subrange);
 
-                        FoundToken(TokenCategory.Identifier, preidentifiedToken);
+                        FoundToken(TokenCategory.Identifier, enclosed, preidentifiedToken);
                         subrange.StartIndex = preidentifiedToken.EndIndex;
                         currentIndex = subrange.StartIndex - 1;
                         break;
@@ -98,16 +96,16 @@ namespace AnimeBird.Parser.Tokens
             }
 
             if(subrange.Length > 0)
-                TokenizeByDelimiters(subrange);
+                TokenizeByDelimiters(enclosed, subrange);
         }
 
-        private void TokenizeByDelimiters(TokenRange range)
+        private void TokenizeByDelimiters(bool enclosed, TokenRange range)
         {
             var delimiter = range.FindDelimiter();
 
             if (delimiter == '\0')
             {
-                FoundToken(TokenCategory.Unknown, range);
+                FoundToken(TokenCategory.Unknown, enclosed, range);
                 return;
             }
 
@@ -122,13 +120,13 @@ namespace AnimeBird.Parser.Tokens
                     delimiterIndex = range.Length;
 
                 var startIndex = prevDelimiterIndex + range.StartIndex;
-                var subrange = new TokenRange(_parser.FileName, startIndex, startIndex + delimiterIndex - prevDelimiterIndex);
+                var subrange = new TokenRange(_fileNameParser.FileName, startIndex, startIndex + delimiterIndex - prevDelimiterIndex);
                 if (subrange.Length > 0)
-                    FoundToken(TokenCategory.Unknown, subrange);
+                    FoundToken(TokenCategory.Unknown, enclosed, subrange);
 
                 if (delimiterIndex != range.Length)
                 {
-                    FoundToken(TokenCategory.Delimiter, new TokenRange(_parser.FileName, subrange.EndIndex, subrange.EndIndex + 1));
+                    FoundToken(TokenCategory.Delimiter, enclosed, new TokenRange(_fileNameParser.FileName, subrange.EndIndex, subrange.EndIndex + 1));
 
                     prevDelimiterIndex = ++delimiterIndex;
                 }
@@ -137,11 +135,11 @@ namespace AnimeBird.Parser.Tokens
 
         private int FindOpeningBracket(int currentPosition, out char matchingBracket)
         {
-            for (var i = currentPosition; i < _parser.FileName.Length; i++)
+            for (var i = currentPosition; i < _fileNameParser.FileName.Length; i++)
             {
                 foreach (var bracketPair in BracketPairs)
                 {
-                    if (bracketPair.Item1 == _parser.FileName[i])
+                    if (bracketPair.Item1 == _fileNameParser.FileName[i])
                     {
                         matchingBracket = bracketPair.Item2;
                         return i;
@@ -150,7 +148,7 @@ namespace AnimeBird.Parser.Tokens
             }
 
             matchingBracket = char.MinValue;
-            return _parser.FileName.Length;
+            return _fileNameParser.FileName.Length;
         }
     }
 }
