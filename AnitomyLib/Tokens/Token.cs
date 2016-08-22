@@ -17,9 +17,13 @@
             Enclosed = enclosed;
         }
 
-        public TokenCategory Category { get; }
-        public string Content { get; }
+        public TokenCategory Category { get; set; }
+        public string Content { get; set; }
         public bool Enclosed { get; }
 
+        public override string ToString()
+        {
+            return $"Token{{Category({Category}) Content({Content}) Enclosed({Enclosed})}}";
+        }
     }
 }

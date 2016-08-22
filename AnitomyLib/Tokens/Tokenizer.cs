@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using AnitomyLib.Extensions;
 using AnitomyLib.Keywords;
 
 namespace AnitomyLib.Tokens
@@ -131,11 +133,60 @@ namespace AnitomyLib.Tokens
 
             ValidateDelimiterTokens();
         }
-
         
         private void ValidateDelimiterTokens()
         {
-            // TODO: Port..
+            for (var i = 0; i < _tokens.Count; i++)
+            {
+                var token = _tokens[i];
+
+                if(token.Category != TokenCategory.Delimiter)
+                    continue;
+
+                var delimiter = token.Content[0];
+                var prevToken = _tokens.FindPreviousToken(i, TokenFlag.Valid);
+                var nextToken = _tokens.FindNextToken(i, TokenFlag.Valid);
+
+                if (delimiter != ' ' && delimiter != '_')
+                {
+                    if (prevToken.Item2.IsSingleCharacter())
+                    {
+                        token.AppendTo(prevToken.Item2);
+                        while (nextToken.Item2.IsUnknown())
+                        {
+                            nextToken.Item2.AppendTo(prevToken.Item2);
+                            nextToken = _tokens.FindNextToken(nextToken.Item1, TokenFlag.Valid);
+                            if (nextToken.Item2.IsDelimiter() && nextToken.Item2.Content[0] == delimiter)
+                            {
+                                nextToken.Item2.AppendTo(prevToken.Item2);
+                                nextToken = _tokens.FindNextToken(nextToken.Item1, TokenFlag.Valid);
+                            }
+                        }
+                        continue;
+                    }
+
+                    if (nextToken.Item2.IsSingleCharacter())
+                    {
+                        token.AppendTo(prevToken.Item2);
+                        nextToken.Item2.AppendTo(prevToken.Item2);
+                        continue;
+                    }
+                }
+
+                if (prevToken.Item2.IsUnknown() && nextToken.Item2.IsDelimiter())
+                {
+                    var nextDelimiter = nextToken.Item2.Content[0];
+                    if (delimiter != nextDelimiter && delimiter != ',')
+                    {
+                        if (nextDelimiter == ' ' || nextDelimiter == '_')
+                        {
+                            token.AppendTo(prevToken.Item2);
+                        }
+                    }
+                }
+            }
+
+            _tokens.RemoveAll(x => x.Category == TokenCategory.Invalid);
         }
 
         private int FindOpeningBracket()
