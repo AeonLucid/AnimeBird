@@ -10,6 +10,9 @@ namespace AnitomyLib.Parse
 {
     internal class Parser
     {
+        private const int AnimeYearMin = 1900;
+        private const int AnimeYearMax = 2050;
+
         private readonly Dictionary<ElementCategory, string> _elements;
         private readonly List<Token> _tokens;
 
@@ -22,7 +25,10 @@ namespace AnitomyLib.Parse
         public bool Parse()
         {
             SearchForKeywords();
-//            SearchForIsolatedNumbers();
+            SearchForIsolatedNumbers();
+
+            if (Options.ParseEpisodeNumber)
+                SearchForEpisodeNumber();
 
             foreach (var keyValuePair in _elements)
             {
@@ -101,6 +107,56 @@ namespace AnitomyLib.Parse
                         tokenData.Item2.Category = TokenCategory.Identifier;
                 }
             }
+        }
+
+        private void SearchForIsolatedNumbers()
+        {
+            for (var tokenIndex = 0; tokenIndex < _tokens.Count; tokenIndex++)
+            {
+                var token = _tokens[tokenIndex];
+                if (token.Category != TokenCategory.Unknown || !token.Content.All(char.IsDigit) || !ParserHelper.IsTokenIsolated(_tokens, tokenIndex, token))
+                    continue;
+
+                var number = int.Parse(token.Content);
+
+                // Anime year
+                if (number >= AnimeYearMin && number <= AnimeYearMax)
+                {
+                    if (!_elements.ContainsKey(ElementCategory.AnimeYear))
+                    {
+                        _elements.Add(ElementCategory.AnimeYear, token.Content);
+                        token.Category = TokenCategory.Identifier;
+                        continue;
+                    }
+                }
+
+                // Video resolution
+                if (number == 480 || number == 720 || number == 1080)
+                {
+                    // If these numbers are isolated, it's more likely for them to be the
+                    // video resolution rather than the episode number. Some fansub groups
+                    // use these without the "p" suffix.
+                    if (!_elements.ContainsKey(ElementCategory.VideoResolution))
+                    {
+                        _elements.Add(ElementCategory.VideoResolution, token.Content);
+                        token.Category = TokenCategory.Identifier;
+                    }
+                }
+            }
+        }
+
+        private void SearchForEpisodeNumber()
+        {
+            var tokens =
+                _tokens.Where(token => token.Category == TokenCategory.Unknown)
+                    .Where(token => token.Content.Any(char.IsDigit))
+                    .ToList();
+
+            if (tokens.Count == 0)
+                return;
+
+            if (ParserNumber.SearchForEpisodePatterns(tokens))
+                return;
         }
     }
 }

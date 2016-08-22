@@ -16,7 +16,7 @@
             Content = content;
             Enclosed = enclosed;
         }
-
+        
         public TokenCategory Category { get; set; }
         public string Content { get; set; }
         public bool Enclosed { get; }

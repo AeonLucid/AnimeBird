@@ -1,5 +1,16 @@
 ﻿[
   {
+    "anime_title": "Juuni Kokki",
+    "audio_term": "OGG",
+    "episode_number": "24",
+    "file_extension": "mkv",
+    "file_name": "[Juuni.Kokki]-(Les.12.Royaumes)-[Ep.24]-[x264+OGG]-[JAP+FR+Sub.FR]-[Chap]-[AzF].mkv",
+    "id": 153,
+    "language": "JAP",
+    "subtitles": "Sub",
+    "video_term": "x264"
+  },
+  {
     "anime_title": "Canaan",
     "audio_term": "AAC",
     "episode_number": "01",
@@ -121,17 +132,6 @@
     "id": 4726,
     "release_group": "HorribleSubs",
     "video_resolution": "480p"
-  },
-  {
-    "anime_title": "Juuni Kokki",
-    "audio_term": "OGG",
-    "episode_number": "24",
-    "file_extension": "mkv",
-    "file_name": "[Juuni.Kokki]-(Les.12.Royaumes)-[Ep.24]-[x264+OGG]-[JAP+FR+Sub.FR]-[Chap]-[AzF].mkv",
-    "id": 153,
-    "language": "JAP",
-    "subtitles": "Sub",
-    "video_term": "x264"
   },
   {
     "anime_title": "One Piece Movie 9",

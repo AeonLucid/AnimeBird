@@ -52,9 +52,10 @@ namespace AnitomyLib.Parse
         public static void CheckExtentKeyword(Dictionary<ElementCategory, string> elements, List<Token> tokens, Tuple<int, Token> tokenData, ElementCategory category)
         {
             var nextToken = tokens.FindNextToken(tokenData.Item1, TokenFlag.NotDelimiter);
-            if (nextToken.Item2.IsUnknown())
+            if (nextToken != null && nextToken.Item2.IsUnknown())
             {
                 // TODO: Implement
+                // FindNumberInString .Any(char.IsDigit)
                 throw new NotImplementedException("CheckExtentKeyword");
             }
         }
@@ -101,6 +102,19 @@ namespace AnitomyLib.Parse
             return false;
         }
 
+        public static bool IsTokenIsolated(List<Token> tokens, int tokenIndex, Token token)
+        {
+            var previousToken = tokens.FindPreviousToken(tokenIndex, TokenFlag.NotDelimiter);
+            if (previousToken == null || previousToken.Item2.Category != TokenCategory.Bracket)
+                return false;
+
+            var nextToken = tokens.FindNextToken(tokenIndex, TokenFlag.NotDelimiter);
+            if (nextToken == null || nextToken.Item2.Category != TokenCategory.Bracket)
+                return false;
+
+            return true;
+        }
+
         private static bool IsHex(IEnumerable<char> chars)
         {
             foreach (var c in chars)
@@ -119,5 +133,6 @@ namespace AnitomyLib.Parse
         {
             return Ordinals.ContainsKey(word) ? Ordinals[word] : string.Empty;
         }
+
     }
 }
