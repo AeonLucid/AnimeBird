@@ -72,28 +72,34 @@ namespace AnitomyLib.Tokens
             var offset = range.Offset;
             var subrange = new TokenRange(range.Offset, 0);
 
-            while (offset < range.Offset + range.Size)
+            while (offset < range.Offset + range.Size) // Loops from given range start to end
             {
-                foreach (var preidentifiedToken in preidentifiedTokens)
+                foreach (var preidentifiedToken in preidentifiedTokens) // Loops through all preidentified tokens
                 {
-                    if (offset == preidentifiedToken.Offset)
+                    if (offset == preidentifiedToken.Offset) // If current loop matches a preidentified token start index
                     {
-                        if (subrange.Size > 0)
-                            TokenizeByDelimiters(enclosed, subrange);
+                        if (subrange.Size > 0) // If there was space between previous preidentified token and current
+                            TokenizeByDelimiters(enclosed, subrange); // Tokenize the contents in that space
 
+                        // Store preidentifiedtoken als identifier
                         AddToken(TokenCategory.Identifier, enclosed, preidentifiedToken);
+                        // Jump subrange offset past the preidentifiedtoken
                         subrange.Offset = preidentifiedToken.Offset + preidentifiedToken.Size;
-                        offset = subrange.Offset - 1; // It's going to be incremented below
+                        // Update offset past the preidentifiedtoken (substract one, gets incremented in the next step)
+                        offset = subrange.Offset - 1;
                         break;
                     }
                 }
 
+                // Increment offset for the next character
                 offset = offset + 1;
+                // Update subrange size
                 subrange.Size = offset - subrange.Offset;
             }
 
+            // If space left
             if(subrange.Size > 0)
-                TokenizeByDelimiters(enclosed, subrange);
+                TokenizeByDelimiters(enclosed, subrange); // Tokenize the contents in that space
         }
 
         private void TokenizeByDelimiters(bool enclosed, TokenRange range)

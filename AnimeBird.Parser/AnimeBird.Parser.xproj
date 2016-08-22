@@ -6,8 +6,8 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>2803c43a-109c-446e-a7cb-4e24da8a2707</ProjectGuid>
-    <RootNamespace>AnitomyLib.PInvoke</RootNamespace>
+    <ProjectGuid>32ad8afa-6b96-40f8-b4e7-d42e8a397dc5</ProjectGuid>
+    <RootNamespace>AnimeBird.Parser</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
   </PropertyGroup>
