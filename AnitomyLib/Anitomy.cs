@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using AnitomyLib.Keywords;
+using AnitomyLib.Parse;
 using AnitomyLib.Tokens;
 
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
@@ -41,7 +42,9 @@ namespace AnitomyLib
             if (!tokenizer.Tokenize())
                 return false;
 
-            // TODO: Parser
+            var parser = new Parser(_elements, _tokens);
+            if (!parser.Parse())
+                return false;
 
             return true;
         }
@@ -64,7 +67,7 @@ namespace AnitomyLib
             if (!fileExtensionOut.All(char.IsLetterOrDigit))
                 return false;
 
-            if (!KeywordManager.Find(ElementCategory.FileExtension, KeywordManager.Normalize(fileExtensionOut)))
+            if (!KeywordManager.Find(KeywordManager.Normalize(fileExtensionOut), ElementCategory.FileExtension))
                 return false;
 
             fileNameOut = fileName.Substring(0, dotPosition);

@@ -181,11 +181,36 @@ namespace AnitomyLib.Keywords
             return str.ToUpper();
         }
 
-        public static bool Find(ElementCategory category, string str)
+        public static bool Find(string str, ElementCategory category)
         {
             var keywordContainer = GetKeywordContainer(category);
 
             return keywordContainer.ContainsKey(str) && keywordContainer[str].Category == category;
+        }
+
+        public static bool Find(string str, ElementCategory category, KeywordOptions options, out ElementCategory outCategory, out KeywordOptions outOptions)
+        {
+            outCategory = category;
+            outOptions = options;
+
+            var keywordContainer = GetKeywordContainer(category);
+
+            if (keywordContainer.ContainsKey(str))
+            {
+                var key = keywordContainer[str];
+                if (category == ElementCategory.Unknown)
+                {
+                    outCategory = key.Category;
+                }
+                else if (key.Category != category)
+                {
+                    return false;
+                }
+                outOptions = key.Options;
+                return true;
+            }
+
+            return false;
         }
 
         public static void Peek(string fileName, TokenRange range, Dictionary<ElementCategory, string> elements, List<TokenRange> preidentifiedTokens)

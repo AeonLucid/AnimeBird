@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AnitomyLib.Extensions;
 using AnitomyLib.Keywords;
 
@@ -172,6 +171,9 @@ namespace AnitomyLib.Tokens
                         continue;
                     }
                 }
+
+                if(prevToken == null || nextToken == null)
+                    continue;
 
                 if (prevToken.Item2.IsUnknown() && nextToken.Item2.IsDelimiter())
                 {
